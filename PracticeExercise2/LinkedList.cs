@@ -136,7 +136,19 @@ public class LinkedList<T> : IList<T>
     /// <returns>The element at the given index.</returns>
     public T Get(int index)
     {
-        
+        if (index >= Length||index < 0)
+        {
+            throw new IndexOutOfRangeException();
+        }
+        var currentNode = Head;
+        for(int i = 0; i <= index; i++)
+        {
+            if (i == index)
+            {
+                return currentNode.Data;
+            }
+            currentNode = currentNode.Next;
+        }
         return default;
     }
 
@@ -149,6 +161,34 @@ public class LinkedList<T> : IList<T>
     /// <param name="existingValue"></param>
     public void InsertAfter(T newItem, T existingItem)
     {
+        if (IsEmpty)
+        {
+            Append(newItem);
+            return;
+        }
+        var index = FirstIndexOf(existingItem);
+        var currentNode = Head;
+        var newNode = new LinkedListNode<T>(newItem);
+        if (index == Length - 1||index == -1)
+        {
+            Append(newItem);
+            return;
+        }
+        else
+        {
+            for(int i = 0; i<=index; i++)
+            {
+                if (i == index)
+                {
+                    newNode.Next = currentNode.Next;
+                    currentNode.Next = newNode;
+                }
+                else
+                {
+                    currentNode = currentNode.Next;
+                }
+            }
+        }
         Length++;
     }
 
@@ -160,6 +200,42 @@ public class LinkedList<T> : IList<T>
     /// <param name="index"></param>
     public void InsertAt(T item, int index)
     {
+        if (index > Length || index < 0)
+        {
+            throw new IndexOutOfRangeException();
+        }
+        if (IsEmpty)
+            {
+                Append(item);
+                return;
+            }
+        var currentNode = Head;
+        var newNode = new LinkedListNode<T>(item);
+        if (index == Length)
+        {
+            Append(item);
+            return;
+        }
+        else if (index == 0)
+        {
+            Prepend(item);
+            return;
+        }
+        else
+        {
+            for(int i = 0; i<=index-1; i++)
+            {
+                if (i == index-1)
+                {
+                    newNode.Next = currentNode.Next;
+                    currentNode.Next = newNode;
+                }
+                else
+                {
+                    currentNode = currentNode.Next;
+                }
+            }
+        }
         Length++;
     }
 
@@ -314,7 +390,14 @@ public class LinkedList<T> : IList<T>
     /// <returns></returns>
     public IList<T> Reverse()
     {
-        throw new NotImplementedException();
+        var newlist = new LinkedList<T>();
+        var current = Head;
+        while(current != null)
+        {
+            newlist.Prepend(current.Data);
+            current = current.Next;
+        }
+        return newlist;
     }
 
     private LinkedListNode<T> GetNode(T item)
